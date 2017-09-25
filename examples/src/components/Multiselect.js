@@ -23,6 +23,7 @@ var MultiSelectField = createClass({
 	},
 	getInitialState () {
 		return {
+			removeSelected: true,
 			disabled: false,
 			crazy: false,
 			stayOpen: false,
@@ -33,7 +34,14 @@ var MultiSelectField = createClass({
 		console.log('You\'ve selected:', value);
 		this.setState({ value });
 	},
-	toggleCheckbox (e) {
+	toggleRemove (e) {
+		this.setState({ removeSelected: e.target.checked });
+	},
+	toggleDisabled (e) {
+		this.setState({ disabled: e.target.checked });
+	},
+	toggleChocolate (e) {
+		let crazy = e.target.checked;
 		this.setState({
 			[e.target.name]: e.target.checked,
 		});
@@ -44,18 +52,13 @@ var MultiSelectField = createClass({
 		return (
 			<div className="section">
 				<h3 className="section-heading">{this.props.label}</h3>
-				<Select
-					closeOnSelect={!stayOpen}
-					disabled={disabled}
-					multi
-					onChange={this.handleSelectChange}
-					options={options}
-					placeholder="Select your favourite(s)"
-					simpleValue
-					value={value}
-				/>
+				<Select multi simpleValue removeSelected={this.state.removeSelected} disabled={this.state.disabled} value={this.state.value} placeholder="Select your favourite(s)" options={this.state.options} onChange={this.handleSelectChange} />
 
 				<div className="checkbox-list">
+					<label className="checkbox">
+						<input type="checkbox" className="checkbox-control" checked={this.state.removeSelected} onChange={this.toggleRemove} />
+						<span className="checkbox-label">Remove selected options</span>
+					</label>
 					<label className="checkbox">
 						<input type="checkbox" className="checkbox-control" name="disabled" checked={disabled} onChange={this.toggleCheckbox} />
 						<span className="checkbox-label">Disable the control</span>
